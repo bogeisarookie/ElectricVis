@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>ElectricVis</title>
+  <!-- leaflet 样式 -->
+  <link rel="stylesheet" href="./lib/leaflet.css" />
+  <!-- bootstrap 样式 -->
+  <link rel="stylesheet" href="lib/bootstrap/bootstrap.css" />
+
+  <!-- jQuery -->
+  <script src="lib/jquery-3.3.1.js"></script>
+  <!-- bootstrap -->
+  <script src="lib/bootstrap/bootstrap.js"></script>
+  <!-- leaflet -->
+  <script src="lib/leaflet.js"></script>
+  <script src="lib/leaflet.ChineseTmsProviders.js"></script>
+  <!-- switch -->
+  <script src="lib/bootstrap-switch.js"></script>
+  <link rel="stylesheet" href="lib/bootstrap-switch.css" />
+  <!-- dateTimePicking -->
+  <script src="./lib//layDate-v5.0.9/layDate-v5.0.9/laydate/laydate.js"></script>
+  <!-- fontawsome -->
+  <link rel="stylesheet" href="lib/font-awesome.css" />
+  <!-- awsomeMarker -->
+  <link rel="stylesheet" href="lib/styles/style.css" />
+  <script src="lib/leaflet.awesome-markers.js"></script>
+  <link rel="stylesheet" href="./lib/leaflet.awesome-markers.css" />
+  <!-- 热力图 -->
+  <script src="./lib//leaflet-heat.js"></script>
+  <!-- Echarts -->
+  <script src="lib/echarts.js"></script>
+  <script src="lib/macarons.js"></script>
+  <!-- icon-select -->
+  <link rel="stylesheet" href="lib/select/style.css" />
+  <!-- d3 -->
+  <script src="lib/d3.v4.min.js"></script>
+  <!-- Graham's Scan -->
+  <script src="lib/graham_scan.js"></script>
+  <!-- Amap -->
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.10&key=023784013ca3bb378423b1949ab8d192&plugin=AMap.DistrictSearch"></script>
+  <!-- 水球图 -->
+  <script src="./lib/liquidFillGauge_aw.js"></script>
+  <!-- layui -->
+  <link rel="stylesheet" href="./lib/layui/css/layui.css">
+  <script src="./lib/layui/layui.js"></script>
+
+
+  <style>
+    .row {
+        margin: 0px;
+      }
+      .toolbar {
+        background-color: #f8f8f8;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .toolbar-title {
+        margin-left: 20px;
+        margin-right: 20px;
+        vertical-align: middle;
+      }
+      .toolbar-timepick{
+        margin-left: 20px;
+       
+      }
+      .toolbar-timepick>input{
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 34px;
+        width:150px;
+        padding: 6px 12px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+      }
+      .navbar-form{
+        margin-left: 650px;
+      }
+      body {
+        padding: 0;
+        margin: 0;
+        background-color: #e0e0e0;
+      }
+
+      .map-container {
+        box-sizing: content-box;
+        padding: 3px;
+        border-radius: 5px;
+        height: 600px;
+        margin-top: 10px;
+        background-color: white;
+      }
+      #map {
+        height: 100%;
+      }
+
+      #detailmap {      
+        height: 700px;
+        padding: 3px;
+        margin-top: 10px;
+        margin-left: 10px;
+        border-radius: 5px;
+      }
+      .detailmap{
+        background-color: white;
+        height: 560px;
+        border-radius: 5px;
+      }
+      .comparemap-container{
+        margin-top: 10px;
+        border-radius: 5px;
+        background-color: white;
+      }
+      #overview-container {
+        margin-top: 10px;
+        height: 250px;
+        background-color: white;
+        border-radius: 5px;
+      }
+      #overview {
+        height: 240px;
+      }
+      .switch {
+        padding-top: 6px;
+        display: inline-block;
+        height: 50px;
+        vertical-align: middle;
+      }
+      .icon-polyuniE900 {
+        margin-left: 20px;
+        margin-bottom: 2px;
+      }
+      .map-table {
+        background-color: white;
+        border-radius: 5px;
+        height: 855px;
+        /* margin-right: 8px; */
+        margin-left: 4px;
+        margin-top: 10px;
+      }
+      #user-type {
+        height: 220px;
+        width: 280px;
+      }
+      .table {
+        margin-top: 2px;
+      }
+      .region {
+        font-weight: 700;
+        font-size: 16px;
+        color: #343434;
+        margin: 10px;
+        padding-top: 10px;
+        text-align: center;
+      }
+      .region:after,
+      .region:before {
+        content: "";
+        position: absolute;
+        top: 28px;
+        height: 2px;
+        background-color: #ccc;
+        width: 80px;
+      }
+      .region:after,
+      .data-overview::after,
+      .category:after,
+      .mapcontrol:after {
+        right: 30px;
+      }
+      .region::before,
+      .data-overview::before,
+      .category:before ,
+      .mapcontrol:before{
+        left: 30px;
+      }
+      .data-overview,
+      .category,
+      .mapcontrol {
+        font-weight: 700;
+        font-size: 16px;
+        color: #343434;
+        margin: 10px;
+        margin-top: 15px;
+        text-align: center;
+      }
+      .data-overview:after,
+      .data-overview:before {
+        content: "";
+        position: absolute;
+        top: 102px;
+        height: 2px;
+        background-color: #ccc;
+        width: 70px;
+      }
+      .category:after,
+      .category:before {
+        content: "";
+        position: absolute;
+        top: 338px;
+        height: 2px;
+        background-color: #ccc;
+        width: 60px;
+      }
+      .mapcontrol:after,
+      .mapcontrol:before{
+        content: "";
+        position: absolute;
+        top: 600px;
+        height: 2px;
+        background-color: #ccc;
+        width: 70px;
+      }
+
+      .select-area-but-container {
+        text-align: center;
+        margin-left: 45px;
+      }
+      .select-current-year-but-container{
+        margin-left: 5px;
+      }
+      .select-com-year-but-container{
+        margin-left: 5px;
+      }
+      .table-container {
+        width: 90%;
+        /* text-align: center; */
+        margin: 0 auto;
+      }
+      /* .data-control {
+        display: inline-block;
+      } */
+      .overview-title {
+        margin-left: 20px;
+      }
+      .overview-icon,
+      .overview-font,
+      .detailmap-icon,
+      .detailmap-font,
+      .comparemap-icon,
+      .comparemap-font {
+        font-size: 16px;
+      }
+      .overview-font,
+      .detailmap-font,
+      .comparemap-font {
+        margin-left: 5px;
+        font-weight: bold;
+      }
+      .detailmap-compare{
+        margin-top: 10px;
+      }
+      .detailmap-compare>.map{
+        margin-top: 10px;
+        height: 220px;
+      }
+      .detailmap-container{
+        margin-top:10px;
+        height: 300px;
+      }
+      #detailmap-line{
+        height: 200px;
+      }
+      .detailmap-info{
+        text-align: center;
+        margin-bottom: 5px;
+      }
+      .userpopup{
+        margin-bottom: 6px;
+      }
+      .ulline{
+        text-align: left;
+      }
+      .badge{
+        text-align: right;
+      }
+      .dataul{
+        list-style-type: none;
+      }
+      .layui-input-block{
+        margin-left: 10px;
+      }
+      .select-com-granularity-but-container{
+        margin-left: 10px;
+      }
+      .select-area{
+        text-align: center;
+      }
+      .select-refresh-time-but-container{
+        margin-left: 65px;
+      }
+      .toolbar-select-area{
+        text-align: center;
+      }
+      .table tbody tr td{
+            vertical-align: middle;
+        }
+    </style>
+
+  <style>
+    .info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+  }
+
+  .info h4 {
+    margin: 0 0 5px;
+    color: #777;
+  }
+
+  .legend {
+    text-align: left;
+    line-height: 18px;
+    color: #555;
+  }
+
+  .legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 1.0;
+  }
+</style>
+  <style>
+    .liquidFillGaugeText {
+          font-family: Helvetica;
+          font-weight: bold;
+      }
+
+
+  .tooltip {
+            /* font-family:  STXingkai; */
+            font-size: 0.5px;
+            width: auto;
+            height: auto;
+              text-align: center;
+            position: absolute;
+        color: #ffffff;
+        max-width: 160px;
+        font-size: 14px;
+        padding: 4px;
+        background: rgba(40, 40, 40, 0.8);
+        border: solid 1px #e9f7f6;
+        border-radius:5px;
+     
+           
+          
+        }
+        h1 {text-align: left;
+                 font-size: 10px;
+                
+                color:whitesmoke; }
+     .tooltip>p{   border-top:1px solid white; width:auto;
+         font-size: 10px;
+        /* font-family:  STXingkai; */
+        color:whitesmoke;
+       text-align: left;}
+  </style>
+
+</head>
+
+<body>
+  <!-- <div class="toolbar">
+    <div class="toolbar-title">
+      <span class="detailmap-icon glyphicon glyphicon-bookmark"></span>
+      <span class="detailmap-font ">ElectricVis</span>
+    </div>
+    <div class="toolbar-map">
+
+    </div>
+    <div class="toolbar-select-area">
+      <button class="icon-polyuniE900 btn btn-default "></button>
+    </div>
+    <div class="toolbar-timepick">
+
+      <input type="text" value="" placeholder="Select Time" id="datetime">
+    </div>
+    <form class="navbar-form navbar-right">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search Location" />
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div> -->
+
+
+
+  <div class="row">
+    <div class="col-md-2">
+      <div class="map-table">
+        <h4 class="region">Data Set</h4>
+        <div class="btn-group select-area-but-container">
+          <button type="button" class="btn btn-default dropdown-toggle select-area-button" data-toggle="dropdown">
+            Baohe District, Hefei City <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">SHuShan District, Hefei City</a></li>
+            <li><a href="#">LuYang District, Hefei City</a></li>
+          </ul>
+        </div>
+        <div class="data-overview">Data statistics</div>
+        <div class="table-container">
+          <!-- <ul class="dataul">
+            <li><span class="ulline">Number of 110kv TS</span><span class="badge">4</span></li>
+          </ul> -->
+          <table class="table">
+            <!-- <thead>
+              <tr>
+                <th>transformer station</th>
+                <th>count</th>
+              </tr>
+            </thead> -->
+            <tbody>
+              <tr>
+                <td>Number of 110kv TS</td>
+                <td><span class="badge">24</span></td>
+              </tr>
+              <tr>
+                <td>Number of 220kv TS</td>
+                <td><span class="badge">13</span></td>
+              </tr>
+              <tr>
+                <td>Number of Users above 10kv</td>
+                <td><span class="badge">2038</span></td>
+              </tr>
+              <tr>
+                <td>Number of Users above 20kv</td>
+                <td><span class="badge">23</span></td>
+              </tr>
+              <tr>
+                <td>Number of Users above 35kv</td>
+                <td><span class="badge">9</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="category">Power type View</div>
+        <div id="user-type"></div>
+        <!-- <div class="data-control"> -->
+        <form class="layui-form" action="">
+          <div class="layui-form-item">
+            <!-- <label class="layui-form-label">复选框</label> -->
+            <div class="mapcontrol">Map Control</div>
+            <div class="layui-input-block">
+              <input type="checkbox" name="mapdot" title="dot" lay-filter='map'>
+              <input type="checkbox" name="mapheat" title="heat" lay-filter='map'>
+              <input type="checkbox" name="mapdistrict" title="district" lay-filter='map'>
+            </div>
+
+            <table class="table">
+              <!-- <thead>
+                <tr>
+                  <th>transformer station</th>
+                  <th>count</th>
+                </tr>
+              </thead> -->
+              <tbody>
+                <tr>
+                  <td> Select Area: </td>
+                  <td>    <div class="toolbar-select-area">
+                    <button class="icon-polyuniE900 btn btn-default "></button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td>Refresh Time</td>
+                  <td>            <div class="btn-group select-refresh-time-but-container">
+                    <button type="button" class="btn btn-default dropdown-toggle select-area-button" data-toggle="dropdown">
+                      5 min <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="#">5 min</a></li>
+                      <li><a href="#">10 min</a></li>
+                      <li><a href="#">30 min</a></li>
+                    </ul>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td>Current Time</td>
+                  <td><div class="toolbar-timepick">
+                    <input type="text" value="" placeholder="Select Time" id="datetime">
+                  </div></td>
+                </tr>
+
+              </tbody>
+            </table>
+
+
+
+          </div>
+        </form>
+        <!-- </div> -->
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div class="map-container col-md-6">
+        <div id="map"></div>
+        <div id="overview-container" class="col-md-12">
+          <div class="overview-title">
+            <span class="overview-icon glyphicon glyphicon-bookmark"></span>
+            <span class="overview-font ">Overview</span>
+          </div>
+          <div id="overview"></div>
+        </div>
+      </div>
+
+      <div id="detailmap" class="col-md-4">
+        <div class="detailmap">
+          <div class="detailmap-title">
+            <span class="detailmap-icon glyphicon glyphicon-bookmark"></span>
+            <span class="detailmap-font ">Detail View</span>
+          </div>
+          <div class="detailmap-info">
+            current obj: <span class="label label-default">Baohe District 1# st</span>
+            <div class="btn-group select-detail-granularity-but-container">
+              <span> granularity:</span>
+              <button type="button" class="btn btn-default dropdown-toggle select-area-button" data-toggle="dropdown">
+                year <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">year</a></li>
+                <li><a href="#">month</a></li>
+                <li><a href="#">day</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="detailmap-container">
+            <svg id="fillgauge" width=500 height="500"></svg>
+          </div>
+          <div id="detailmap-line"></div>
+        </div>
+
+        <div class="comparemap-container" class="col-md-4">
+          <div class="comparemap-title">
+            <span class="comparemap-icon glyphicon glyphicon-bookmark"></span>
+            <span class="comparemap-font ">Comparison View</span>
+          </div>
+          <div class="detailmap-compare">
+            <div class="tool">
+              <div class="btn-group select-com-granularity-but-container">
+                <span>granularity:</span>
+                <button type="button" class="btn btn-default dropdown-toggle select-area-button" data-toggle="dropdown">
+                  month <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">year</a></li>
+                  <li><a href="#">month</a></li>
+                  <li><a href="#">day</a></li>
+                </ul>
+              </div>
+              <div class="btn-group select-current-year-but-container">
+                <span>current time:</span>
+                <button type="button" class="btn btn-default dropdown-toggle select-area-button" data-toggle="dropdown">
+                  2017-8 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">2017</a></li>
+                  <li><a href="#">2016</a></li>
+                  <li><a href="#">2015</a></li>
+                </ul>
+
+              </div>
+              <div class="btn-group select-com-year-but-container">
+                <span> contrast time:</span>
+                <button type="button" class="btn btn-default dropdown-toggle select-area-button" data-toggle="dropdown">
+                  2017-12 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">2017</a></li>
+                  <li><a href="#">2016</a></li>
+                  <li><a href="#">2015</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="map"></div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  <script>
+
+  </script>
+  <!-- 数据 -->
+  <script src="./lib/data/biandianzhan.js"></script>
+  <script src="./src/initmap.js"></script>
+  <script src="./src/mockdata.js"></script>
+
+  <script src="./src/init.js"></script>
+  <script src="./src/drawRiverEchart.js"></script>
+  <script src="./src//drawTypeChart.js"></script>
+  <script src="./src/drawDetailchart.js"></script>
+  <script src="./src/lines.js"></script>
+  <script src="./src/drawLines.js"></script>
+  <script src="./src/drawPolyByGraham.js"></script>
+  <script src="./lib/data/user.js"></script>
+  <script src="./src/drawUser.js"></script>
+  <script src="./src/drawComparedChart.js"></script>
+  <script src="./src/drawAmap.js"></script>
+  <script src="./src/drawDetailmap.js"></script>
+  <script src="./src//drawScattor.js"></script>
+  <!-- 绘制测试数据，一个多边形 -->
+  <script src="./src/drawPolygon.js"></script>
+  <script src="./src/drawLineUsers.js"></script>
+  <script src="./src/initLayui.js"></script>
+  <script src="./src/drawPops.js"></script>
+</body>
+
+</html>
