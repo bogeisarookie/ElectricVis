@@ -1,0 +1,31 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?fvorzp');
+  src:  url('fonts/icomoon.eot?fvorzp#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?fvorzp') format('truetype'),
+    url('fonts/icomoon.woff?fvorzp') format('woff'),
+    url('fonts/icomoon.svg?fvorzp#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-poly"], [class*=" icon-poly"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  font-size: 18px;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-polyuniE900:before {
+  content: "\e900";
+  color: #666;
+}
